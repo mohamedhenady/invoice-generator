@@ -154,18 +154,27 @@
 
     <!-- Footer will repeat on every page bottom -->
     <div class="invoice-footer">
-        <div style="position: relative; width: 100%;">
-            {% if invoice.stamp_src %}
-            <!-- Stamp Overlay on bottom-left -->
-            <div style="position: absolute; left: 10px; bottom: 0px; z-index: 50;">
-                <img src="{{ invoice.stamp_src }}" alt="Stamp" style="max-height: 120px; opacity: 0.85;">
-            </div>
-            {% endif %}
-            <div style="text-align: center; position: relative;">
-                <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
-                <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
-            </div>
-        </div>
+        <table style="width: 100%; border: none; table-layout: fixed; margin: 0; padding: 0;">
+            <tr>
+                <!-- Stamp column -->
+                <td style="width: 20%; border: none; text-align: left; vertical-align: bottom; padding: 0;">
+                    {% if invoice.stamp_src %}
+                    <img src="{{ invoice.stamp_src }}" alt="Stamp" style="max-height: 110px; opacity: 0.85; margin-bottom: -15px;">
+                    {% endif %}
+                </td>
+                
+                <!-- Company Info center column -->
+                <td style="width: 60%; border: none; text-align: center; vertical-align: bottom; padding: 0;">
+                    <div style="font-size: 10px; color: var(--text-muted);">
+                        <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
+                        <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
+                    </div>
+                </td>
+                
+                <!-- Empty right column to balance centering -->
+                <td style="width: 20%; border: none; padding: 0;"></td>
+            </tr>
+        </table>
     </div>
 
     <!-- Main Content Flow -->
