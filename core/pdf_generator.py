@@ -33,20 +33,24 @@ def generate_pdf(invoice: InvoiceData) -> bytes:
         current_dir = Path(__file__).parent.parent
         template_dir = current_dir / "templates"
         
-        # 2. تجهيز اللوجو
+        # 2. تجهيز اللوجو والختم
         logo_path = current_dir / invoice.logo_path
         logo_src = _encode_logo(str(logo_path))
+        
+        stamp_path = current_dir / "assets" / "stamp.png"
+        stamp_src = _encode_logo(str(stamp_path))
         
         # 3. تحميل القالب
         env = _get_jinja_env(str(template_dir))
         template = env.get_template("invoice.html")
         
         # 4. الريندر (Rendering)
-        # نقوم بإضافة logo_src ليكون متاحاً في التيمبليت
+        # نقوم بإضافة logo_src و stamp_src ليكونوا متاحين في التيمبليت
         html_content = template.render(
             invoice={
                 **invoice.__dict__,
-                "logo_src": logo_src
+                "logo_src": logo_src,
+                "stamp_src": stamp_src
             }
         )
         
