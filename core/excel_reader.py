@@ -20,9 +20,10 @@ def read_invoice_excel(file_path: str, sheet_name: Optional[str] = None) -> Dict
         # 1. تنظيف أسماء الأعمدة: إزالة المسافات وتجنب التكرار
         df.columns = [str(col).strip() for col in df.columns]
         
-        # 2. تنظيف البيانات: حذف الصفوف الفارغة وتحويل NaN لسلسلة فارغة
+        # 2. تنظيف البيانات: حذف الصفوف الفارغة
         df.dropna(how='all', inplace=True)
-        df.fillna("", inplace=True)
+        # تحويل كل الأعمدة لنصوص (Object) لتجنب مشاكل النوع مع القيم الفارغة
+        df = df.astype(object).fillna("")
         
         # تجهيز البيانات للإرجاع
         columns = df.columns.tolist()
