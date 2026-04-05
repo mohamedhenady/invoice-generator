@@ -28,16 +28,18 @@
         @page { 
             size: A4; 
             margin-top: 4cm; 
-            margin-bottom: 2cm; 
+            margin-bottom: 2.5cm; 
             margin-left: 0.5cm; 
             margin-right: 0.5cm; 
 
-            /* Header moved exclusively to top-left for English LTR */
             @top-left {
                 content: element(header);
             }
             @bottom-center {
                 content: element(footer);
+            }
+            @bottom-left {
+                content: element(stamp);
             }
         }
 
@@ -70,8 +72,14 @@
             width: 100%;
         }
 
-        @media screen {
-            .invoice-header, .invoice-footer { position: static; }
+        /* Stamp – appears in bottom-left margin of every page */
+        .invoice-stamp {
+            position: running(stamp);
+        }
+        .invoice-stamp img {
+            max-height: 110px;
+            max-width: 110px;
+            opacity: 0.85;
         }
 
         /* Main Content */
@@ -141,8 +149,10 @@
 </head>
 <body dir="ltr">
     {% if invoice.stamp_src %}
-    <!-- Stamp treated as a free-floating picture repeated on every page -->
-    <img src="{{ invoice.stamp_src }}" alt="Stamp Overlay" style="position: fixed; bottom: 5px; left: 20px; max-height: 150px; max-width: 150px; z-index: 999; opacity: 0.85;">
+    <!-- Stamp placed as a running element in @bottom-left margin -->
+    <div class="invoice-stamp">
+        <img src="{{ invoice.stamp_src }}" alt="Company Stamp">
+    </div>
     {% endif %}
 
     <!-- Header will repeat on every page top -->
