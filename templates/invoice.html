@@ -139,7 +139,11 @@
         }
     </style>
 </head>
-<body>
+<body dir="ltr">
+    {% if invoice.stamp_src %}
+    <!-- Stamp treated as a free-floating picture repeated on every page -->
+    <img src="{{ invoice.stamp_src }}" alt="Stamp Overlay" style="position: fixed; bottom: 5px; left: 20px; max-height: 150px; max-width: 150px; z-index: 999; opacity: 0.85;">
+    {% endif %}
 
     <!-- Header will repeat on every page top -->
     <div class="invoice-header">
@@ -152,27 +156,8 @@
 
     <!-- Footer will repeat on every page bottom -->
     <div class="invoice-footer">
-        <table style="width: 100%; border: none; table-layout: fixed; margin: 0; padding: 0;">
-            <tr>
-                <!-- Stamp column -->
-                <td style="width: 20%; border: none; text-align: left; vertical-align: bottom; padding: 0;">
-                    {% if invoice.stamp_src %}
-                    <img src="{{ invoice.stamp_src }}" alt="Stamp" style="max-height: 110px; opacity: 0.85; margin-bottom: -15px;">
-                    {% endif %}
-                </td>
-                
-                <!-- Company Info center column -->
-                <td style="width: 60%; border: none; text-align: center; vertical-align: bottom; padding: 0;">
-                    <div style="font-size: 10px; color: var(--text-muted);">
-                        <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
-                        <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
-                    </div>
-                </td>
-                
-                <!-- Empty right column to balance centering -->
-                <td style="width: 20%; border: none; padding: 0;"></td>
-            </tr>
-        </table>
+        <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
+        <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
     </div>
 
     <!-- Main Content Flow -->
