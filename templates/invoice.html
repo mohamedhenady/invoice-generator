@@ -27,16 +27,13 @@
 
         @page { 
             size: A4; 
-            margin-top: 4cm; 
-            margin-bottom: 2.5cm; 
+            margin-top: 3cm; 
+            margin-bottom: 2cm; 
             margin-left: 0.5cm; 
             margin-right: 0.5cm; 
 
             @top-left {
                 content: element(header);
-            }
-            @bottom-left {
-                content: element(stamp);
             }
             @bottom-right {
                 content: element(footer);
@@ -45,20 +42,27 @@
 
         .invoice-header {
             position: running(header);
-            padding: 5px;
-            text-align: left; 
+            padding: 0;
             width: 100%;
         }
 
-        .logo {
-            display: inline-block;
-        }
+        .header-table { width: 100%; border: none; margin-bottom: 0; }
+        .header-table td { border: none; padding: 0; vertical-align: middle; background: transparent !important; }
+        
+        .logo { text-align: left; }
         .logo img { 
-            max-height: 90px; 
-            max-width: 350px; 
+            max-height: 85px; 
+            max-width: 320px; 
             object-fit: contain; 
             padding: 5px; 
             border-radius: 4px; 
+        }
+
+        .stamp-hdr { text-align: right; padding-right: 10px; }
+        .stamp-hdr img { 
+            max-height: 100px; 
+            max-width: 120px; 
+            opacity: 0.9;
         }
 
         /* Footer */
@@ -70,17 +74,7 @@
             color: var(--text-muted);
         }
 
-        /* Stamp */
-        .invoice-stamp {
-            position: running(stamp);
-            text-align: left;
-        }
-        .invoice-stamp img {
-            max-height: 120px;
-            max-width: 150px;
-            opacity: 0.85;
-            padding-bottom: 5px;
-        }
+        /* Stamp styling replaced with inline signature table */
 
 
 
@@ -142,7 +136,11 @@
         .notes-label { font-weight: 600; color: var(--primary); margin-bottom: 5px; font-size: 11px; }
         .notes-content { white-space: pre-line; color: #444; font-size: 11px; }
 
-        .signature-section { text-align: left; padding: 15px 30px; margin-top: 20px; font-weight: 600; font-size: 11px; }
+        .signature-table { border: none; margin-bottom: 0; margin-top: 40px; page-break-inside: avoid; width: 100%; }
+        .signature-table td { border: none; padding: 10px; background: transparent !important; word-wrap: normal; overflow-wrap: normal; word-break: normal; }
+        .sig-text { text-align: left; vertical-align: bottom; font-weight: 600; font-size: 11px; }
+        .text-right { text-align: right; }
+        .primary-text { color: var(--primary); }
 
         @media print {
             tbody tr { page-break-inside: avoid; }
@@ -152,20 +150,24 @@
 <body dir="ltr">
 
 
-    <!-- Stamp will repeat automatically on every page bottom-left -->
-    <div class="invoice-stamp">
-        {% if invoice.stamp_src %}
-            <img src="{{ invoice.stamp_src }}" alt="Stamp">
-        {% endif %}
-    </div>
+
 
     <!-- Header will repeat on every page top -->
     <div class="invoice-header">
-        <div class="logo">
-            {% if invoice.logo_src %}
-                <img src="{{ invoice.logo_src }}" alt="Logo">
-            {% endif %}
-        </div>
+        <table class="header-table">
+            <tr>
+                <td class="logo">
+                    {% if invoice.logo_src %}
+                        <img src="{{ invoice.logo_src }}" alt="Logo">
+                    {% endif %}
+                </td>
+                <td class="stamp-hdr">
+                    {% if invoice.stamp_src %}
+                        <img src="{{ invoice.stamp_src }}" alt="Stamp">
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
     </div>
 
     <!-- Footer will repeat on every page bottom-right -->
@@ -192,8 +194,8 @@
             
             {% if invoice.invoice_total %}
             <div class="meta-item" style="margin-left: auto;">
-                <div class="meta-label" style="text-align: right; color: var(--primary); font-size: 11px;">Total Amount</div>
-                <div class="meta-value" style="font-size: 16px; color: var(--primary);">{{ invoice.invoice_total }}</div>
+                <div class="meta-label text-right primary-text" style="font-size: 11px;">Total Amount</div>
+                <div class="meta-value primary-text" style="font-size: 16px;">{{ invoice.invoice_total }}</div>
             </div>
             {% endif %}
         </div>
@@ -228,9 +230,13 @@
 
 
         <!-- End of document signature -->
-        <div class="signature-section" style="margin-top: 40px;">
-            Authorized Signature: ___________________________
-        </div>
+        <table class="signature-table">
+            <tr>
+                <td class="sig-text">
+                    Authorized Signature: ___________________________
+                </td>
+            </tr>
+        </table>
     </div>
 
 </body>
