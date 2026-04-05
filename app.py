@@ -81,18 +81,29 @@ if excel_file:
                 result = read_invoice_excel("temp_invoice.xlsx", sheet_name=selected_sheet)
                 st.dataframe(result["preview_df"])
 
-        # التحكم في عرض الأعمدة
+        # التحكم في عرض الأعمدة (نسبة وتناسب)
         st.markdown("---")
-        st.write("📏 **التحكم في عرض الأعمدة (%)**")
-        st.caption("ملاحظة: يمكنك تعديل النسبة لكل عمود للحصول على أفضل شكل. (تم تخصيص عرض ثابت لعمود الترقيم #).")
-        col_widths = []
+        st.write("📏 **توزيع مساحات الأعمدة (زي الإكسيل)**")
+        st.caption("دلوقتي لو كبرت مؤشر هتلاقي التاني بيصغر قدامه أوتوماتيك لإنهم بيتوزعوا بنسبة وتناسب زي شد الخلايا في الإكسيل. جرب تزود وزن العمود اللي عايز توسعه (مثلا خليه 5) والباقي خليهم (1 أو 2).")
+        
+        raw_weights = []
         num_cols = len(result["columns"])
         split_cols = st.columns(num_cols)
+        
         for i, col_name in enumerate(result["columns"]):
             with split_cols[i]:
-                default_w = int(100 / num_cols)
-                w = st.slider(col_name, min_value=1, max_value=100, value=default_w, key=f"col_w_{i}")
-                col_widths.append(w)
+                # Weight slider (1 to 20)
+                w = st.slider(col_name, min_value=1, max_value=20, value=3, key=f"col_w_{i}")
+                raw_weights.append(w)
+                
+        # Normalize weights to percentages
+        total_weight = sum(raw_weights)
+        col_widths = [int((w / total_weight) * 100) for w in raw_weights]
+        
+        # Show the user the real-time calculated percentages
+        for i, w_pct in enumerate(col_widths):
+            with split_cols[i]:
+                st.info(f"المساحة: {w_pct}%")
 
         # القسم الرابع: التوليد والتحميل
         st.markdown("---")
