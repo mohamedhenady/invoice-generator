@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - {{ invoice.invoice_number }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a5276;
+            --primary-light: #2980b9;
+            --row-alt: #f8f9fa;
+            --border: #dee2e6;
+            --text-dark: #1a1a2e;
+            --text-muted: #6c757d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            color: var(--text-dark); 
+            font-size: 11px; 
+            line-height: 1.4;
+            background-color: #fff;
+        }
+
+        @page { 
+            size: A4; 
+            margin-top: 2cm; 
+            margin-bottom: 2cm; 
+            margin-left: 0.5cm; 
+            margin-right: 0.5cm; 
+
+            /* Header moved exclusively to top-left for English LTR */
+            @top-left {
+                content: element(header);
+            }
+            @bottom-center {
+                content: element(footer);
+            }
+        }
+
+        .invoice-header {
+            position: running(header);
+            padding: 5px;
+            text-align: left; 
+            width: 100%;
+        }
+
+        .logo {
+            background-color: #ffffff !important;
+            display: inline-block;
+        }
+        .logo img { 
+            max-height: 60px; 
+            max-width: 250px; 
+            object-fit: contain; 
+            background-color: #ffffff !important; 
+            padding: 5px; 
+            border-radius: 4px; 
+        }
+
+        /* Footer */
+        .invoice-footer {
+            position: running(footer);
+            border-top: 2px solid var(--primary);
+            padding-top: 10px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            width: 100%;
+        }
+
+        @media screen {
+            .invoice-header, .invoice-footer { position: static; }
+        }
+
+        /* Main Content */
+        .content-main {
+            width: 100%;
+        }
+
+        /* Meta Section */
+        .invoice-meta {
+            display: flex;
+            padding: 8px 15px;
+            background: #f0f7ff;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        .meta-item { margin-right: 30px; } /* Changed to margin-right for LTR */
+        .meta-label { font-weight: 600; color: var(--primary); font-size: 9px; text-transform: uppercase; }
+        .meta-value { font-size: 12px; font-weight: 700; }
+
+        /* Table */
+        table { 
+            width: 100%; 
+            max-width: 100%; /* Force table to stay inside page */
+            border-collapse: collapse; 
+            margin-bottom: 15px; 
+            border: 1px solid var(--border);
+            table-layout: fixed; /* Strictly obey the dynamic widths */
+        }
+        
+        th { 
+            background-color: var(--primary); 
+            color: white; 
+            padding: 4px; 
+            font-size: 9px; 
+            text-align: center; 
+            vertical-align: middle;
+            border: 1px solid var(--border);
+        }
+        
+        td { 
+            padding: 4px; 
+            border: 1px solid var(--border); 
+            font-size: 9px; 
+            text-align: center; 
+            vertical-align: middle;
+            /* Aggressive word breaks to ensure NO column goes off the page */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all; 
+        }
+        .row-alt td { background-color: var(--row-alt); }
+        .row-num { text-align: center; width: 25px; color: var(--text-muted); }
+
+        /* Notes & Signature */
+        .notes-section { padding: 10px 15px; border: 1px dashed var(--border); margin: 10px 0; border-radius: 5px; }
+        .notes-label { font-weight: 600; color: var(--primary); margin-bottom: 5px; font-size: 11px; }
+        .notes-content { white-space: pre-line; color: #444; font-size: 11px; }
+
+        .signature-section { text-align: left; padding: 15px 30px; margin-top: 20px; font-weight: 600; font-size: 11px; }
+
+        @media print {
+            tbody tr { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header will repeat on every page top -->
+    <div class="invoice-header">
+        <div class="logo">
+            {% if invoice.logo_src %}
+                <img src="{{ invoice.logo_src }}" alt="Logo">
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer will repeat on every page bottom -->
+    <div class="invoice-footer">
+        <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
+        <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
+    </div>
+
+    <!-- Main Content Flow -->
+    <div class="content-main">
+        <div class="invoice-meta">
+            <div class="meta-item">
+                <div class="meta-label">Customer</div>
+                <div class="meta-value">{{ invoice.customer_name }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Invoice Number</div>
+                <div class="meta-value">{{ invoice.invoice_number }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Date</div>
+                <div class="meta-value">{{ invoice.invoice_date }}</div>
+            </div>
+            
+            {% if invoice.invoice_total %}
+            <div class="meta-item" style="margin-left: auto;">
+                <div class="meta-label" style="text-align: right; color: var(--primary); font-size: 11px;">Total Amount</div>
+                <div class="meta-value" style="font-size: 16px; color: var(--primary);">{{ invoice.invoice_total }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="row-num" style="width: 25px;">#</th>
+                    {% for col in invoice.columns %}
+                        <th style="width: {{ invoice.column_widths[loop.index0] }}%;">{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in invoice.rows %}
+                    <tr class="{% if loop.index % 2 == 0 %}row-alt{% endif %}">
+                        <td class="row-num">{{ loop.index }}</td>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if invoice.notes %}
+            <div class="notes-section">
+                <div class="notes-label">Notes:</div>
+                <div class="notes-content">{{ invoice.notes }}</div>
+            </div>
+        {% endif %}
+
+        <div class="signature-section">
+            Signature: ___________________________
+        </div>
+    </div>
+
+</body>
+</html>
