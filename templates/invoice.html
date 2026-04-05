@@ -35,7 +35,10 @@
             @top-left {
                 content: element(header);
             }
-            @bottom-center {
+            @bottom-left {
+                content: element(stamp);
+            }
+            @bottom-right {
                 content: element(footer);
             }
         }
@@ -61,12 +64,22 @@
         /* Footer */
         .invoice-footer {
             position: running(footer);
-            border-top: 2px solid var(--primary);
             padding-top: 10px;
-            text-align: center;
+            text-align: right;
             font-size: 10px;
             color: var(--text-muted);
-            width: 100%;
+        }
+
+        /* Stamp */
+        .invoice-stamp {
+            position: running(stamp);
+            text-align: left;
+        }
+        .invoice-stamp img {
+            max-height: 120px;
+            max-width: 150px;
+            opacity: 0.85;
+            padding-bottom: 5px;
         }
 
 
@@ -139,6 +152,13 @@
 <body dir="ltr">
 
 
+    <!-- Stamp will repeat automatically on every page bottom-left -->
+    <div class="invoice-stamp">
+        {% if invoice.stamp_src %}
+            <img src="{{ invoice.stamp_src }}" alt="Stamp">
+        {% endif %}
+    </div>
+
     <!-- Header will repeat on every page top -->
     <div class="invoice-header">
         <div class="logo">
@@ -148,7 +168,7 @@
         </div>
     </div>
 
-    <!-- Footer will repeat on every page bottom -->
+    <!-- Footer will repeat on every page bottom-right -->
     <div class="invoice-footer">
         <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
         <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
@@ -207,26 +227,9 @@
         {% endif %}
 
 
-        <!-- Stamp + Signature Row at end of invoice -->
-        <div style="margin-top: 30px; width: 100%;">
-            <table style="width: 100%; border: none; table-layout: fixed;">
-                <tr>
-                    <!-- Stamp on left -->
-                    <td style="width: 30%; border: none; text-align: left; vertical-align: bottom; padding: 0;">
-                        {% if invoice.stamp_src %}
-                        <img src="{{ invoice.stamp_src }}" alt="Company Stamp" style="max-height: 130px; max-width: 130px; opacity: 0.9;">
-                        {% endif %}
-                    </td>
-                    <!-- Middle spacer -->
-                    <td style="width: 40%; border: none;"></td>
-                    <!-- Signature on right -->
-                    <td style="width: 30%; border: none; text-align: center; vertical-align: bottom; padding: 10px;">
-                        <div style="border-top: 1px solid #333; padding-top: 5px; font-size: 10px; color: #555;">
-                            Authorized Signature
-                        </div>
-                    </td>
-                </tr>
-            </table>
+        <!-- End of document signature -->
+        <div class="signature-section" style="margin-top: 40px;">
+            Authorized Signature: ___________________________
         </div>
     </div>
 
