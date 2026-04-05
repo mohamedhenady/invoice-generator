@@ -38,9 +38,6 @@
             @bottom-center {
                 content: element(footer);
             }
-            @bottom-left {
-                content: element(stamp);
-            }
         }
 
         .invoice-header {
@@ -72,15 +69,7 @@
             width: 100%;
         }
 
-        /* Stamp – appears in bottom-left margin of every page */
-        .invoice-stamp {
-            position: running(stamp);
-        }
-        .invoice-stamp img {
-            max-height: 110px;
-            max-width: 110px;
-            opacity: 0.85;
-        }
+
 
         /* Main Content */
         .content-main {
@@ -148,12 +137,7 @@
     </style>
 </head>
 <body dir="ltr">
-    {% if invoice.stamp_src %}
-    <!-- Stamp placed as a running element in @bottom-left margin -->
-    <div class="invoice-stamp">
-        <img src="{{ invoice.stamp_src }}" alt="Company Stamp">
-    </div>
-    {% endif %}
+
 
     <!-- Header will repeat on every page top -->
     <div class="invoice-header">
@@ -222,8 +206,27 @@
             </div>
         {% endif %}
 
-        <div class="signature-section">
-            Signature: ___________________________
+
+        <!-- Stamp + Signature Row at end of invoice -->
+        <div style="margin-top: 30px; width: 100%;">
+            <table style="width: 100%; border: none; table-layout: fixed;">
+                <tr>
+                    <!-- Stamp on left -->
+                    <td style="width: 30%; border: none; text-align: left; vertical-align: bottom; padding: 0;">
+                        {% if invoice.stamp_src %}
+                        <img src="{{ invoice.stamp_src }}" alt="Company Stamp" style="max-height: 130px; max-width: 130px; opacity: 0.9;">
+                        {% endif %}
+                    </td>
+                    <!-- Middle spacer -->
+                    <td style="width: 40%; border: none;"></td>
+                    <!-- Signature on right -->
+                    <td style="width: 30%; border: none; text-align: center; vertical-align: bottom; padding: 10px;">
+                        <div style="border-top: 1px solid #333; padding-top: 5px; font-size: 10px; color: #555;">
+                            Authorized Signature
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
