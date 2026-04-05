@@ -153,15 +153,17 @@
     </div>
 
     <!-- Footer will repeat on every page bottom -->
-    <div class="invoice-footer" style="position: relative;">
-        {% if invoice.stamp_src %}
-        <div style="position: absolute; right: 20px; bottom: -5px; z-index: -1;">
-            <img src="{{ invoice.stamp_src }}" alt="Stamp" style="max-height: 75px; opacity: 0.85;">
-        </div>
-        {% endif %}
-        <div style="text-align: center; position: relative;">
-            <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
-            <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
+    <div class="invoice-footer">
+        <div style="position: relative; width: 100%;">
+            {% if invoice.stamp_src %}
+            <div style="position: absolute; right: 20px; bottom: -5px; z-index: -1;">
+                <img src="{{ invoice.stamp_src }}" alt="Stamp" style="max-height: 75px; opacity: 0.85;">
+            </div>
+            {% endif %}
+            <div style="text-align: center; position: relative;">
+                <div>{{ invoice.company_name }} | {{ invoice.company_address }} - {{ invoice.company_phone }}</div>
+                <div style="margin-top: 2px;">{{ invoice.company_email_1 }} | {{ invoice.company_email_2 }}</div>
+            </div>
         </div>
     </div>
 
